@@ -10,15 +10,15 @@ class AppLocalizations {
 
   ///creates an instance for the given locale
   AppLocalizations(this.locale);
-///retrieves the Applocalizations instance
+  ///retrieves the Applocalizations instance
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
-///a amp containing the localized strings.
+  ///a amp containing the localized strings.
   late Map<String, String> _localizedStrings;
-///loads the localized texts for the current locale
+  ///loads the localized texts for the current locale
   Future<bool> load() async {
     String jsonString = await rootBundle.loadString('assets/translations/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
@@ -29,7 +29,7 @@ class AppLocalizations {
 
     return true;
   }
-///retrieves the localized text
+  ///retrieves the localized text
   String translate(String key) {
     return _localizedStrings[key] ?? 'Translation not found';
   }

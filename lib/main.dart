@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'add_customer.dart';
+import 'add_flight.dart';
+import 'list_reservation.dart';
 import 'airplane_list_page.dart';
 import 'localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'add_edit_airplane_page.dart';
 
 /// The main function is the entry point for the application.
 void main() {
   runApp(MyApp());
 }
-///The root widget
+
+/// The root widget
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-///The state class
+
+/// The state class
 class _MyAppState extends State<MyApp> {
-  ///_locale holds the current locale
+  /// _locale holds the current locale
   Locale _locale = Locale('en', 'US');
 
   /// _changeLanguage changes the locale and displays a snackbar.
   void _changeLanguage(Locale locale) {
     setState(() {
-      ///new locale
+      /// new locale
       _locale = locale;
     });
 
@@ -50,84 +54,109 @@ class _MyAppState extends State<MyApp> {
         const Locale('fr', 'FR'),
       ],
       home: MainPage(onLocaleChange: _changeLanguage, locale: _locale),
+      debugShowCheckedModeBanner: false, // Remove the debug banner
     );
   }
 }
-///Main screen of the application.
+
+/// Main screen of the application.
 class MainPage extends StatelessWidget {
-  ///Function to change the locale
+  /// Function to change the locale
   final Function(Locale) onLocaleChange;
   final Locale locale;
-///Creates MainPage widget.
+
+  /// Creates MainPage widget.
   MainPage({required this.onLocaleChange, required this.locale});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('title')),
-        actions: [
-          DropdownButton<Locale>(
-            onChanged: (Locale? locale) {
-              if (locale != null) {
-                onLocaleChange(locale);
-              }
-            },
-            icon: Icon(Icons.language, color: Colors.white),
-            value: locale,
-            items: [
-              DropdownMenuItem(
-                value: Locale('en', 'US'),
-                child: Text('English'),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background2.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 30), // Space between image and buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconTheme(
+                    data: IconThemeData(color: Colors.white),
+                    child: PopupMenuButton<Locale>(
+                      icon: Icon(Icons.language),
+                      onSelected: onLocaleChange,
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          PopupMenuItem(
+                            value: Locale('en', 'US'),
+                            child: Text('English'),
+                          ),
+                          PopupMenuItem(
+                            value: Locale('fr', 'FR'),
+                            child: Text('Français'),
+                          ),
+                        ];
+                      },
+                    ),
+                  ),
+                ],
               ),
-              DropdownMenuItem(
-                value: Locale('fr', 'FR'),
-                child: Text('Français'),
+              // Add the airline logo image
+              Image.asset(
+                'assets/airline_logo.png',
+                width: 200, // Adjust the width as needed
+                height: 100, // Adjust the height as needed
               ),
+              SizedBox(height: 20), // Space between image and buttons
+              Text(
+                'AC Travel Services',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 40,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 20), // Space between image and buttons
+              // Buttons
+              _buildStyledButton(context, 'Airplanes', AirplaneListPage()),
+              SizedBox(height: 15), // Space between buttons
+              _buildStyledButton(context, 'Customer', AddCustomerPage()),
+              SizedBox(height: 15),
+              _buildStyledButton(context, 'Flights', AddFlightPage()),
+              SizedBox(height: 15),
+              _buildStyledButton(context, 'Reservation', ListReservationPage()),
             ],
           ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AirplaneListPage()),
-                );
-              },
-              child: Text(AppLocalizations.of(context).translate('Airplanes')),
-            ),
-            SizedBox(height: 20), // Space between buttons
-            ElevatedButton(
-              onPressed: () {
-                // Placeholder function
-                print('Customer button pressed');
-              },
-              child: Text(AppLocalizations.of(context).translate('Customer')),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Placeholder function
-                print('Flights button pressed');
-              },
-              child: Text(AppLocalizations.of(context).translate('Flights')),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Placeholder function
-                print('Reservation button pressed');
-              },
-              child: Text(AppLocalizations.of(context).translate('Reservation')),
-            ),
-          ],
         ),
       ),
+    );
+  }
+
+  /// Helper method to build styled buttons
+  ElevatedButton _buildStyledButton(BuildContext context, String label, Widget page) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white70, // Background color
+        foregroundColor: Colors.black, // Text color
+        minimumSize: Size(MediaQuery.of(context).size.width * 0.8, 50), // Width and height
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // Rectangular shape with no rounded edges
+        ),
+      ),
+      child: Text(AppLocalizations.of(context).translate(label)),
     );
   }
 }

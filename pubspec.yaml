@@ -14,6 +14,7 @@ dependencies:
   sqflite: ^2.0.0+3
   path: ^1.8.1
   shared_preferences: ^2.0.6
+  encrypted_shared_preferences: ^3.0.1
   intl: ^0.19.0
   flutter_localizations:
     sdk: flutter
@@ -31,3 +32,9 @@ flutter:
   assets:
     - assets/translations/en.json
     - assets/translations/fr.json
+    - assets/background.jpg
+    - assets/background1.jpg
+    - assets/background2.jpg
+    - assets/background3.jpg
+    - assets/background4.jpg
+    - assets/airline_logo.png
