@@ -20,7 +20,7 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
     super.initState();
     _loadAirplanes();
   }
-///loading the airplane list from database
+  ///loading the airplane list from database
   Future<void> _loadAirplanes() async {
     final airplanes = await DatabaseHelper.instance.getAirplanes();
     setState(() {

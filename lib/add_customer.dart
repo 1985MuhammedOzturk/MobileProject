@@ -122,27 +122,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                       ),
                     ),
                     const SizedBox(height: 24), // Space between text and buttons
-                    TextFormField(
+                    _buildTextFormField(
                       controller: _firstNameController,
-                      decoration: const InputDecoration(
-                        labelText: 'First Name',
-                        labelStyle: TextStyle(color: Colors.white), // Field label color
-                        hintText: 'Enter first name',
-                        hintStyle: TextStyle(color: Colors.white), // Placeholder text color
-                        filled: false, // No fill color
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orangeAccent),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      label: 'First Name',
+                      hint: 'Enter first name',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter first name';
@@ -151,27 +134,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextFormField(
                       controller: _lastNameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Last Name',
-                        labelStyle: TextStyle(color: Colors.white), // Field label color
-                        hintText: 'Enter last name',
-                        hintStyle: TextStyle(color: Colors.white), // Placeholder text color
-                        filled: false, // No fill color
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orangeAccent),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      label: 'Last Name',
+                      hint: 'Enter last name',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter last name';
@@ -180,27 +146,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextFormField(
                       controller: _birthdayController,
-                      decoration: const InputDecoration(
-                        labelText: 'Birthday',
-                        labelStyle: TextStyle(color: Colors.white), // Field label color
-                        hintText: 'Enter birthday',
-                        hintStyle: TextStyle(color: Colors.white), // Placeholder text color
-                        filled: false, // No fill color
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orangeAccent),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      label: 'Birthday',
+                      hint: 'Enter birthday',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter birthday';
@@ -209,27 +158,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextFormField(
                       controller: _addressController,
-                      decoration: const InputDecoration(
-                        labelText: 'Address',
-                        labelStyle: TextStyle(color: Colors.white), // Field label color
-                        hintText: 'Enter address',
-                        hintStyle: TextStyle(color: Colors.white), // Placeholder text color
-                        filled: false, // No fill color
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orangeAccent),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      label: 'Address',
+                      hint: 'Enter address',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter address';
@@ -273,7 +205,14 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainPage()),
+                  MaterialPageRoute(
+                    builder: (context) => MainPage(
+                      locale: const Locale('en', 'US'), // Provide a default locale
+                      onLocaleChange: (locale) {
+                        // Handle locale change if needed
+                      },
+                    ),
+                  ),
                 );
               },
             ),
@@ -307,6 +246,44 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Builds a text form field with consistent styling.
+  ///
+  /// The [controller] is used to manage the input's value.
+  /// The [label] is the text displayed as the label of the field.
+  /// The [hint] provides a hint to the user about the expected input.
+  /// The [validator] is used to validate the input value.
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white), // Label text color
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white), // Hint text color
+        filled: false, // No fill color
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.orangeAccent),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+      validator: validator,
     );
   }
 

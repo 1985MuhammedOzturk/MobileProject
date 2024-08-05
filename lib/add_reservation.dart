@@ -5,37 +5,22 @@ import 'add_customer.dart';
 import 'add_flight.dart';
 import 'main.dart';
 
-/// A page to add a new reservation.
 class AddReservationPage extends StatefulWidget {
-  /// Creates an [AddReservationPage] widget.
-  const AddReservationPage({super.key});
+  const AddReservationPage({Key? key}) : super(key: key);
 
   @override
   _AddReservationPageState createState() => _AddReservationPageState();
 }
 
-/// State class for [AddReservationPage].
 class _AddReservationPageState extends State<AddReservationPage> {
-  /// Key used to identify and manage the form.
   final _formKey = GlobalKey<FormState>();
-
-  /// Controller for the reservation name input field.
   final _reservationNameController = TextEditingController();
-
-  /// Controller for the reservation date input field.
   final _reservationDateController = TextEditingController();
-
-  /// The selected customer from the dropdown menu.
   String? _selectedCustomer;
-
-  /// The selected flight from the dropdown menu.
   String? _selectedFlight;
 
-  /// List of customer names to populate the customer dropdown menu.
   List<String> _customers = [];
-
-  /// List of flight names to populate the flight dropdown menu.
-  List<dynamic> _flights = [];
+  List<String> _flights = [];
 
   @override
   void initState() {
@@ -44,7 +29,6 @@ class _AddReservationPageState extends State<AddReservationPage> {
     _loadFlights();
   }
 
-  /// Loads the list of customers from the database and updates the state.
   Future<void> _loadCustomers() async {
     final customerList = await DatabaseHelper.instance.queryAllCustomers();
     setState(() {
@@ -54,17 +38,15 @@ class _AddReservationPageState extends State<AddReservationPage> {
     });
   }
 
-  /// Loads the list of flights from the database and updates the state.
   Future<void> _loadFlights() async {
     final flightList = await DatabaseHelper.instance.queryAllFlights();
     setState(() {
       _flights = flightList.map((flight) {
-        return flight[DatabaseHelper.columnFlightName];
+        return flight[DatabaseHelper.columnFlightName] as String; // Cast to String
       }).toList();
     });
   }
 
-  /// Adds a new reservation to the database if the form is valid and both customer and flight are selected.
   Future<void> _addReservation() async {
     if (_formKey.currentState!.validate()) {
       if (_selectedCustomer != null && _selectedFlight != null) {
@@ -84,7 +66,6 @@ class _AddReservationPageState extends State<AddReservationPage> {
             DatabaseHelper.columnReservationDate: reservationDate,
           });
 
-          // Navigate to the reservation list page
           if (mounted) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -93,64 +74,58 @@ class _AddReservationPageState extends State<AddReservationPage> {
             );
           }
         } catch (e) {
-          // Show an error message if the reservation could not be added
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error, color: Colors.white), // Alert icon
+                    const Icon(Icons.error, color: Colors.white),
                     const SizedBox(width: 8.0),
                     Expanded(child: Text('Error: $e')),
                   ],
                 ),
-                backgroundColor: Colors.red, // SnackBar background color
+                backgroundColor: Colors.red,
               ),
             );
           }
         }
       } else {
-        // Show a message if either customer or flight is not selected
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.warning, color: Colors.white), // Alert icon
+                  Icon(Icons.warning, color: Colors.white),
                   SizedBox(width: 8.0),
                   Expanded(child: Text('Please select both customer and flight')),
                 ],
               ),
-              backgroundColor: Colors.red, // SnackBar background color
+              backgroundColor: Colors.red,
             ),
           );
         }
       }
     } else {
-      // Show a SnackBar if any of the form fields are empty
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.warning, color: Colors.white), // Alert icon
+                Icon(Icons.warning, color: Colors.white),
                 SizedBox(width: 8.0),
                 Expanded(child: Text('Please enter an input for every field of the form')),
               ],
             ),
-            backgroundColor: Colors.red, // SnackBar background color
+            backgroundColor: Colors.red,
           ),
         );
       }
     }
   }
 
-  /// Retrieves the ID of a customer based on their first and last name.
-  ///
-  /// Throws an [Exception] if the customer is not found.
   Future<int> _getCustomerId(String firstName, String lastName) async {
     final result = await DatabaseHelper.instance.queryAllCustomers();
     for (var customer in result) {
@@ -162,9 +137,6 @@ class _AddReservationPageState extends State<AddReservationPage> {
     throw Exception('Customer not found');
   }
 
-  /// Retrieves the ID of a flight based on its name.
-  ///
-  /// Throws an [Exception] if the flight is not found.
   Future<int> _getFlightId(String flightName) async {
     final result = await DatabaseHelper.instance.queryAllFlights();
     for (var flight in result) {
@@ -182,12 +154,12 @@ class _AddReservationPageState extends State<AddReservationPage> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/background4.jpg', // Background image
+              'assets/background4.jpg',
               fit: BoxFit.cover,
             ),
           ),
           Container(
-            color: Colors.black54, // Semi-transparent overlay
+            color: Colors.black54,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -195,7 +167,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
                 child: ListView(
                   children: [
                     const Padding(
-                      padding: EdgeInsets.only(top: 16.0), // Space from the top
+                      padding: EdgeInsets.only(top: 16.0),
                       child: Text(
                         'Add Reservation',
                         textAlign: TextAlign.center,
@@ -214,7 +186,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
                           value: customer,
                           child: Text(
                             customer,
-                            style: const TextStyle(color: Colors.orangeAccent), // Label text color
+                            style: const TextStyle(color: Colors.orangeAccent),
                           ),
                         );
                       }).toList(),
@@ -225,18 +197,18 @@ class _AddReservationPageState extends State<AddReservationPage> {
                       },
                       decoration: InputDecoration(
                         labelText: 'Select Customer',
-                        labelStyle: const TextStyle(color: Colors.white), // Label text color
+                        labelStyle: const TextStyle(color: Colors.white),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        icon: const Icon(Icons.person, color: Colors.white), // White icon
+                        icon: const Icon(Icons.person, color: Colors.white),
                       ),
-                      iconEnabledColor: Colors.white, // Dropdown icon color
+                      iconEnabledColor: Colors.white,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please select a customer';
@@ -252,7 +224,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
                           value: flight,
                           child: Text(
                             flight,
-                            style: const TextStyle(color: Colors.orangeAccent), // Label text color
+                            style: const TextStyle(color: Colors.orangeAccent),
                           ),
                         );
                       }).toList(),
@@ -263,18 +235,18 @@ class _AddReservationPageState extends State<AddReservationPage> {
                       },
                       decoration: InputDecoration(
                         labelText: 'Select Flight',
-                        labelStyle: const TextStyle(color: Colors.white), // Label text color
+                        labelStyle: const TextStyle(color: Colors.white),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        icon: const Icon(Icons.flight, color: Colors.white), // White icon
+                        icon: const Icon(Icons.flight, color: Colors.white),
                       ),
-                      iconEnabledColor: Colors.white, // Dropdown icon color
+                      iconEnabledColor: Colors.white,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please select a flight';
@@ -287,21 +259,21 @@ class _AddReservationPageState extends State<AddReservationPage> {
                       controller: _reservationNameController,
                       decoration: InputDecoration(
                         labelText: 'Reservation Name',
-                        labelStyle: const TextStyle(color: Colors.white), // Label text color
+                        labelStyle: const TextStyle(color: Colors.white),
                         hintText: 'Enter reservation name',
-                        hintStyle: const TextStyle(color: Colors.white54), // Hint text color
-                        fillColor: Colors.transparent, // Transparent fill color
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        fillColor: Colors.transparent,
                         filled: true,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      style: const TextStyle(color: Colors.orangeAccent),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter reservation name';
@@ -314,21 +286,21 @@ class _AddReservationPageState extends State<AddReservationPage> {
                       controller: _reservationDateController,
                       decoration: InputDecoration(
                         labelText: 'Reservation Date',
-                        labelStyle: const TextStyle(color: Colors.white), // Label text color
+                        labelStyle: const TextStyle(color: Colors.white),
                         hintText: 'Enter reservation date',
-                        hintStyle: const TextStyle(color: Colors.white54), // Hint text color
-                        fillColor: Colors.transparent, // Transparent fill color
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        fillColor: Colors.transparent,
                         filled: true,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white), // White outline
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      style: const TextStyle(color: Colors.orangeAccent), // Input text color
+                      style: const TextStyle(color: Colors.orangeAccent),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter reservation date';
@@ -338,11 +310,11 @@ class _AddReservationPageState extends State<AddReservationPage> {
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
-                      width: double.infinity, // Span the width of the page
+                      width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orangeAccent, // Button background color
-                          side: const BorderSide(color: Colors.white), // White outline
+                          backgroundColor: Colors.orangeAccent,
+                          side: const BorderSide(color: Colors.white),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -351,7 +323,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
                         onPressed: _addReservation,
                         child: const Text(
                           'Save',
-                          style: TextStyle(color: Colors.white), // Button text color
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -363,7 +335,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.orangeAccent, // Background color of the bottom menu
+        color: Colors.orangeAccent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -372,7 +344,12 @@ class _AddReservationPageState extends State<AddReservationPage> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainPage()),
+                  MaterialPageRoute(
+                    builder: (context) => MainPage(
+                      locale: Locale('en', 'US'), // Pass required parameters
+                      onLocaleChange: (locale) {},
+                    ),
+                  ),
                 );
               },
             ),
@@ -381,7 +358,9 @@ class _AddReservationPageState extends State<AddReservationPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddCustomerPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const AddCustomerPage(),
+                  ),
                 );
               },
             ),
@@ -390,7 +369,9 @@ class _AddReservationPageState extends State<AddReservationPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddFlightPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const AddFlightPage(),
+                  ),
                 );
               },
             ),
@@ -399,7 +380,9 @@ class _AddReservationPageState extends State<AddReservationPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ListReservationPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ListReservationPage(),
+                  ),
                 );
               },
             ),

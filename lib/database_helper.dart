@@ -6,7 +6,7 @@ import 'airplane.dart';
 class DatabaseHelper {
   ///singleton instance
   static final DatabaseHelper instance = DatabaseHelper._init();
-///database instance
+  ///database instance
   static Database? _database;
 
   ///constructor for the singleton instance
@@ -39,12 +39,12 @@ class DatabaseHelper {
     )
     ''');
   }
-///insert an airplane into the database
+  ///insert an airplane into the database
   Future<int> insertAirplane(Airplane airplane) async {
     final db = await instance.database;
     return await db.insert('airplanes', airplane.toMap());
   }
-///updates the airplane in the databsae
+  ///updates the airplane in the databsae
   Future<int> updateAirplane(Airplane airplane) async {
     final db = await instance.database;
     return await db.update(
@@ -54,7 +54,7 @@ class DatabaseHelper {
       whereArgs: [airplane.id],
     );
   }
-///deletes the airplane from the database
+  ///deletes the airplane from the database
   Future<int> deleteAirplane(int id) async {
     final db = await instance.database;
     return await db.delete(

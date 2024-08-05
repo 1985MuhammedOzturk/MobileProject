@@ -149,7 +149,14 @@ class AddFlightPageState extends State<AddFlightPage> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainPage()),
+                  MaterialPageRoute(
+                    builder: (context) => MainPage(
+                      locale: const Locale('en', 'US'), // Provide a default locale
+                      onLocaleChange: (locale) {
+                        // Handle locale change if needed
+                      },
+                    ),
+                  ),
                 );
               },
             ),
@@ -167,7 +174,7 @@ class AddFlightPageState extends State<AddFlightPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddFlightPage()),
+                  MaterialPageRoute(builder: (context) => const AddFlightPage()), // Use without const if needed
                 );
               },
             ),

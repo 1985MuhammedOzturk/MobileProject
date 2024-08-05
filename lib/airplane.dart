@@ -1,5 +1,5 @@
 class Airplane {
-///the unique identifier
+  ///the unique identifier
   final int? id;
   ///brand and model of the airplane
   final String type;
@@ -17,7 +17,7 @@ class Airplane {
     required this.maxSpeed,
     required this.range,
   });
-///toMap:the representation of the event in a form
+  ///toMap:the representation of the event in a form
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -27,7 +27,7 @@ class Airplane {
       'range': range,
     };
   }
-///creates an instance of airplane from a map
+  ///creates an instance of airplane from a map
   factory Airplane.fromMap(Map<String, dynamic> map) {
     return Airplane(
       id: map['id'],
